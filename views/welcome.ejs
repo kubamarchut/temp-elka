@@ -1,0 +1,165 @@
+<style>
+</style>
+
+<div class="date-panel">
+  <div class="clock">18:33</div>
+  <div class="date">sobota, 22 stycznia 2022</div>
+</div>
+<div id="container">
+<div class="fixedbar"></div>
+<ul>
+  <li>
+    <h2>10:00-11:45</h2>
+    <div class="subjectbox active">
+      <h1>Analiza</h1>
+      <h3>dr Jason Statham</h3>
+      <canvas class="qrcode" id="qrcode"></canvas>
+    </div>
+  </li>
+  <li>
+    <h2>12:00-13:45</h2>
+    <div class="subjectbox">
+      <h1>Analiza</h1>
+      <h3>dr Jason Statham</h3>
+      <canvas class="qrcode" id="qrcode"></canvas>
+    </div>
+  </li>
+  <li>
+    <h2>14:00-15:15</h2>
+    <div class="subjectbox">
+      <h1>Analiza</h1>
+      <h3>dr Jason Statham</h3>
+      <canvas class="qrcode" id="qrcode"></canvas>
+    </div>
+  </li>
+  <li>
+    <h2>16:00-18:45</h2>
+    <div class="subjectbox">
+      <h1>Analiza</h1>
+      <h3>dr Jason Statham</h3>
+      <canvas class="qrcode" id="qrcode"></canvas>
+    </div>
+  </li>
+</ul>
+
+ <!--SCRIPTS-->
+ <script type="text/javascript">
+   function addZero(num){
+     if (num.toString().length == 1){
+       num = "0" + num
+     }
+     return num
+   }
+   months = ["stycznia", "lutego", "marzeca", "kwietnia", "maja", "czerwieca", "lipca", "sierpienia", "wrzesień", "październik", "listopad", "grudzień"]
+   days = ["niedziela", "poniedziałek","wtorek","środa", "czwartek","piątek","sobota"]
+   let clock = document.querySelector('div.clock')
+   let datepanel = document.querySelector('div.date')
+   var now = new Date();
+   var time = addZero(now.getHours()) +":"+ addZero(now.getMinutes())
+   var date = days[now.getDay()] + ", " + now.getDate() + " " + months[now.getMonth()]+ " " + now.getFullYear();
+
+   clock.innerHTML = time
+   datepanel.innerHTML = date
+   setInterval(()=>{
+     var now = new Date();
+     var time = addZero(now.getHours()) +":"+ addZero(now.getMinutes())
+     var date = days[now.getDay()] + ", " + now.getDate() + " " + months[now.getMonth()]+ " " + now.getFullYear();
+
+     clock.innerHTML = time
+     datepanel.innerHTML = date
+
+   }, 30000)
+
+ </script>
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
+
+<script type="text/javascript">
+  new QRious({element: document.getElementById("qrcode"), value: window.location.href+"chat/1111/", size: 500});
+</script>
+<script type="text/javascript" src="/assets/js/basic.js"></script>
+<script type="text/javascript">
+  var alertMSG = ['nazwę pokoju', 'jedno ze zdjęć']
+  const connectForm = document.getElementById("connectForm");
+
+    connectForm.addEventListener("submit", function(event){
+      event.preventDefault();
+
+      var request = new XMLHttpRequest();
+      var url = "/connecttochat";
+      request.open("POST", url, true);
+      request.setRequestHeader("Content-Type", "application/json");
+      request.onreadystatechange = function () {
+          if (request.readyState === 4){
+            if(request.status === 200){
+              var ans = JSON.parse(request.response);
+              if(ans.error){
+                showAlert('error', ans.msg)
+              }
+              else{
+                showAlert('success' , ans.msg);
+                setTimeout(function(){
+                  var www = 'http://' + location.host + ans.www;
+                  window.location.href = www;
+                }, 2500)
+              }
+            }
+            else{
+              showAlert('warning', 'Coś poszło nie tak, odśwież stronę i spróbuj ponownie')
+            }
+          }
+      };
+      var roomName = document.getElementById("roomName").value
+      var data = JSON.stringify({'name': roomName});
+      request.send(data);
+    })
+</script>
+<script type="text/javascript">
+  const createForm = document.getElementById("createForm");
+
+    createForm.addEventListener("submit", function(event) {
+
+      event.preventDefault();
+
+        var request = new XMLHttpRequest();
+        var url = "/createchat";
+        request.open("POST", url, true);
+        request.setRequestHeader("Content-Type", "application/json");
+        request.onreadystatechange = function () {
+            if (request.readyState === 4){
+              if(request.status === 200){
+                var ans = JSON.parse(request.response);
+                if(ans.error){
+                  showAlert('error', ans.msg)
+                }
+                else{
+                  showAlert('success' , ans.msg);
+                  setTimeout(function(){
+                    var www = 'http://' + location.host + ans.www;
+                    window.location.href = www;
+                  }, 2500);
+                }
+              }
+              else{
+                showAlert('warning', 'Coś poszło nie tak, odśwież stronę i spróbuj ponownie')
+              }
+            }
+        };
+        var roomNr =  document.getElementById("roomNr").value;
+        var pictures = document.getElementsByName("picture");
+        var picture = '';
+        for (var i = 0; i < pictures.length; i++) {
+          if(pictures[i].checked) {
+            var picture = i + 1;
+            break;
+          }
+        }
+        var password = document.getElementById("password").value;
+        if((roomNr != '') && (picture != '')){
+          var data = JSON.stringify({"roomNr": roomNr, "picture": picture, "password": password});
+          request.send(data);
+        }
+        goNextPrev(1);
+    });
+</script>
+<!--SCRIPTS END-->
+</div>
