@@ -125,11 +125,11 @@
                 temps.push(Number(json.data[i].text));
               }
 
-              tempbox.innerHTML = average(temps);
+              tempbox.innerHTML = average(temps) + " średnia z " + temps.length + " głosów";
           } else if (json.type === 'message') { // it's a single message
               input.removeAttr('disabled'); // let the user write another message
               temps.push(Number(json.data.text))
-              tempbox.innerHTML = average(temps);
+              tempbox.innerHTML = average(temps) + " średnia z " + temps.length + " głosów";
           } else {
               console.log('Hmm..., I\'ve never seen JSON like this: ', json);
           }
