@@ -26,7 +26,7 @@ $(function () {
 
     // open connection
     var adr = location.host.replace('/chat/1111/', '')
-    var connection = new WebSocket('ws://' + adr);
+    var connection = new WebSocket('wss://' + adr);
 
     connection.onopen = function () {
         // first we want users to enter their names
